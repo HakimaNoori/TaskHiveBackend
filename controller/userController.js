@@ -2,6 +2,7 @@ import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
+// ثبت‌نام
 export const signup = async (req, res) => {
   const { name, email, password } = req.body;
   try {
@@ -22,7 +23,9 @@ export const signup = async (req, res) => {
   }
 };
 
+// ورود
 export const signin = async (req, res) => {
+  console.log("Body:", req.body);
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
@@ -39,6 +42,61 @@ export const signin = async (req, res) => {
       token,
       user: { id: user._id, name: user.name, email: user.email },
     });
+  } catch (err) {
+    res.status(500).json({ msg: "Server error" });
+  }
+};
+
+// دریافت همه کاربران
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find().select("-password");
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json({ msg: "Server error" });
+  }
+};
+
+// دریافت یک کاربر خاص
+export const getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select("-password");
+    if (!user) return res.status(404).json({ msg: "User not found" });
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ msg: "Server error" });
+  }
+};
+
+// ویرایش کاربر
+export const updateUser = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+    const updatedData = { name, email };
+    if (password) {
+      updatedData.password = await bcrypt.hash(password, 10);
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      updatedData,
+      { new: true }
+    ).select("-password");
+
+    if (!updatedUser) return res.status(404).json({ msg: "User not found" });
+
+    res.status(200).json({ msg: "User updated", user: updatedUser });
+  } catch (err) {
+    res.status(500).json({ msg: "Server error" });
+  }
+};
+
+// حذف کاربر
+export const deleteUser = async (req, res) => {
+  try {
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
+    if (!deletedUser) return res.status(404).json({ msg: "User not found" });
+    res.status(200).json({ msg: "User deleted" });
   } catch (err) {
     res.status(500).json({ msg: "Server error" });
   }
