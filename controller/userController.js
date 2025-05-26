@@ -2,7 +2,6 @@ import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-// ثبت‌نام
 export const signup = async (req, res) => {
   const { name, email, password } = req.body;
   try {
@@ -23,7 +22,6 @@ export const signup = async (req, res) => {
   }
 };
 
-// ورود
 export const signin = async (req, res) => {
   console.log("Body:", req.body);
   const { email, password } = req.body;
@@ -47,7 +45,6 @@ export const signin = async (req, res) => {
   }
 };
 
-// دریافت همه کاربران
 export const getAllUsers = async (req, res) => {
   try {
     const users = await User.find().select("-password");
@@ -57,7 +54,6 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
-// دریافت یک کاربر خاص
 export const getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select("-password");
@@ -68,7 +64,6 @@ export const getUserById = async (req, res) => {
   }
 };
 
-// ویرایش کاربر
 export const updateUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -91,7 +86,6 @@ export const updateUser = async (req, res) => {
   }
 };
 
-// حذف کاربر
 export const deleteUser = async (req, res) => {
   try {
     const deletedUser = await User.findByIdAndDelete(req.params.id);

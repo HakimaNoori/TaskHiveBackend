@@ -10,14 +10,12 @@ import {
 
 const router = express.Router();
 
-// ثبت‌نام و ورود
 router.post("/signup", signup);
 router.post("/signin", signin);
 
-// عملیات CRUD کاربران
-router.get("/", getAllUsers); // همه کاربران
-router.get("/:id", getUserById); // کاربر خاص
-router.put("/:id", updateUser); // ویرایش کاربر
-router.delete("/:id", deleteUser); // حذف کاربر
+router.get("/", getAllUsers); 
+router.get("/:id", getUserById);
+router.put("/:id", updateUser);   
+router.delete("/:id", deleteUser); 
 
 export default router;
