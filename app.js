@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors"; 
 import userRoutes from "./routes/userRoute.js";
+import taskRoutes from "./routes/taskRoutes.js";
 
 dotenv.config();
 
@@ -10,7 +11,7 @@ const app = express();
 app.use(express.json());
 
 // Allow requests from any origin
-app.use(cors()); 
+app.use(cors("*")); 
 
 mongoose
   .connect(process.env.MONGODB_URI)
@@ -19,6 +20,7 @@ mongoose
 
 
 app.use("/api/users", userRoutes);
+app.use("/api/tasks", taskRoutes);
 
 app.get("/", (req, res) => {
   res.send("Server is running. Use /api/users for API.");
